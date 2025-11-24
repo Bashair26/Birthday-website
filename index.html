@@ -1,274 +1,203 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Happy Birthday Ahmed</title>
-  <style>
-    :root{
-      --bg1: #ffdfe6;
-      --bg2: #ffeef4;
-      --card: #fff7f9;
-      --accent: #ff5a82; /* pink/red */
-      --accent-dark: #c10029;
-      --muted: #7a6f72;
-    }/* Reset */
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{
-  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  background: linear-gradient(180deg,var(--bg1),var(--bg2));
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  color:#333;
-  overflow-x:hidden;
-}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Countdown</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-/* floating hearts background (soft) */
-.hearts-bg{
-  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.7;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08) 0 2%, transparent 3%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0 2%, transparent 3%);
-  background-repeat:no-repeat;
-}
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Pacifico', cursive;
+        background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        color: #fff;
+        text-align: center;
+        position: relative;
+    }
 
-/* card style (reference look) */
-.card-wrap{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;z-index:1;position:relative;
-}
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
 
-.card{
-  width:92%;max-width:380px;background:var(--card);border-radius:18px;padding:28px 22px;text-align:center;
-  box-shadow:0 10px 30px rgba(193,44,82,0.12);border:5px solid rgba(255,214,222,0.6);
-  position:relative;
-}
+    #countdown {
+        font-size: 2em;
+        margin: 20px 0;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
 
-.lock-ico{width:60px;height:60px;margin:6px auto 12px;display:block}
+    #letterBtn {
+        padding: 15px 30px;
+        font-size: 1.2em;
+        background: #fff;
+        color: #ee9ca7;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        display: none;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    }
 
-h1.title{font-family:'Great Vibes', cursive; font-size:28px;margin:6px 0 4px;color:var(--accent-dark)}
-p.sub{margin:0;color:var(--muted);font-size:14px}
+    #letterBtn:hover {
+        transform: scale(1.1);
+    }
 
-/* countdown numbers row */
-.timer{
-  display:flex;gap:8px;justify-content:center;margin-top:18px;margin-bottom:16px;flex-wrap:wrap
-}
-.timebox{min-width:60px}
-.timeval{font-size:34px;color:var(--accent);font-weight:600;font-family:serif}
-.timelabel{font-size:13px;color:#6b5b5f;margin-top:6px}
+    #letter {
+        display: none;
+        background: rgba(255,255,255,0.8);
+        color: #ee9ca7;
+        padding: 20px;
+        border-radius: 15px;
+        margin-top: 20px;
+        max-width: 90%;
+        font-size: 1.1em;
+        line-height: 1.5em;
+    }
 
-.preview-btn{margin-top:14px;background:linear-gradient(90deg,#ff86a1,#ff5a82);border:none;color:white;padding:12px 18px;border-radius:30px;font-size:16px;box-shadow:0 8px 20px rgba(255,90,130,0.18);cursor:pointer}
+    /* Popup modal */
+    #popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: none; /* Hidden initially */
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
 
-/* locked text */
-.locked{margin-top:12px;color:#6d5c60;font-size:15px}
+    #popupContent {
+        background: #fff;
+        color: #ee9ca7;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 2em;
+        max-width: 80%;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+    }
 
-/* popup */
-#popup{
-  display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.6);z-index:80;
-  background:linear-gradient(135deg,#ff0040,#ff6b8f);color:#fff;padding:28px 32px;border-radius:20px;box-shadow:0 18px 60px rgba(193,44,82,0.28);
-  text-align:center;font-size:22px;font-weight:700;letter-spacing:0.4px
-}
+    #closePopup {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #ee9ca7;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+    }
 
-/* letter container */
-#letterPage{display:none;padding:36px;background:linear-gradient(180deg,#fff5f7,#fff7fa);min-height:100vh;z-index:2}
-.letter-box{max-width:760px;margin:0 auto;background:#fff;border-radius:14px;padding:22px 26px;box-shadow:0 8px 30px rgba(193,44,82,0.05)}
-.letter-box h2{color:var(--accent-dark);text-align:center;margin-top:0}
-.letter-box p{white-space:pre-line;line-height:1.6;color:#3b2f32;font-size:16px}
+    /* Sparkle animation */
+    @keyframes sparkle {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
 
-/* confetti canvas */
-canvas#confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:70;display:none}
-
-/* small responsive tweaks */
-@media (min-width:760px){
-  .card{padding:36px 36px}
-  .timeval{font-size:42px}
-  h1.title{font-size:36px}
-}
-
-  </style>
+    .sparkle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border-radius: 50%;
+        animation: sparkle 2s linear infinite;
+    }
+</style>
 </head>
 <body>
-  <div class="hearts-bg"></div>  <!-- FRONT CARD (reference look) -->  <div class="card-wrap" id="frontWrap">
-    <div class="card" role="region" aria-label="Birthday countdown front">
-      <!-- lock icon (rounded) -->
-      <img class="lock-ico" src="https://i.imgur.com/2J7YkYw.png" alt="lock icon" /><h1 class="title">A Surprise for Ahmed</h1>
-  <p class="sub">Unlocking on 26 November 2025</p>
 
-  <div class="timer" aria-hidden="false">
-    <div class="timebox">
-      <div class="timeval" id="days">0</div>
-      <div class="timelabel">Days</div>
-    </div>
-    <div class="timebox">
-      <div class="timeval" id="hours">0</div>
-      <div class="timelabel">Hours</div>
-    </div>
-    <div class="timebox">
-      <div class="timeval" id="minutes">0</div>
-      <div class="timelabel">Minutes</div>
-    </div>
-    <div class="timebox">
-      <div class="timeval" id="seconds">0</div>
-      <div class="timelabel">Seconds</div>
-    </div>
-  </div>
+<h1>Happy Birthday Countdown 🎀</h1>
+<div id="countdown">00d 00h 00m 00s</div>
+<button id="letterBtn">Read Your Letter 💌</button>
 
-  <button class="preview-btn" id="startBtn">Preview (Testers)</button>
-
-  <div class="locked">🔒 Your special letter is locked…</div>
+<!-- Popup -->
+<div id="popup">
+    <div id="popupContent">
+        Happy Birthday, bachaa! 🎉💕
+        <br>
+        <button id="closePopup">Close</button>
+    </div>
 </div>
 
-  </div>  <!-- Popup -->  <div id="popup">❤️ Happy Birthday Ahmed ❤️</div>  <!-- Confetti canvas --><canvas id="confetti"></canvas>
+<div id="letter">
+    <p>Hiiiiiiii hiiii hiiiii ^^<br>
+    Finallyyy the countdown is over, baby! So once again…<br>
+    HAPPYYY BIRTHDAYY LOVE HEHE 🤭<br><br>
+    HEYYYAA I'M HERE 💕<br>
+    Do you remember the first time we talked, on 6 August 2022? I swear that was one of the most memorable days of my life because everything changed from that day… I couldn’t control myself, I just kept falling for you—every single day.<br><br>
+    Mhm, I don’t even know how to express my feelings. I literally can’t describe my love for you in words.<br>
+    I just pray for us… that we always stay together, that we get married one day — my biggest dream with you. I pray that we stay happy, that we get tons of happiness together. And I pray that you find success in everything you do. Ameen.<br><br>
+    I just want to see you at the top of success because you’re the only man I ever prayed for.<br>
+    Ahhh I’m getting emotional now, so I'm ending this letter 🫠<br>
+    I just want to say that I’ll always love you. I’m never giving up on you, no matter what.<br><br>
+    So remember this:<br>
+    <b>“You’ll always be my bachaa, chandaa, meri jaan.”</b><br><br>
+    I hope you like this small effort from my side to make you smile 🎀<br>
+    Love youuuu ~</p>
+</div>
 
-  <!-- Letter page (hidden until unlock) -->  <div id="letterPage">
-    <div class="letter-box">
-      <h2>Your Letter 💌</h2>
-      <p>
-Hiiiiiiii hiiii hiiiii ^^
-Finallyyy the countdown is over, baby! So once again…
-<b>HAPPYYY BIRTHDAYY LOVE HEHE 🤭</b>Okayyy, so the wait is officially over now, and here is your unlocked letter 🫠 It’s not very long, but every single word and every feeling I put in it means so much to me, I swear <3 Sooo yaaaa, here is your letter below — and one thing: Please read it with the lights off so you can feel every word exactly the way I feel it for you.
-
-
----
-
-<b>HEYYYAA I’M HERE 💕</b> Do you remember the first time we talked, on 6 August 2022? I swear that was one of the most memorable days of my life because everything changed from that day… I couldn’t control myself, I just kept falling for you—every single day.
-
-When we used to fall asleep on call… When we met… When we held hands for the first time… When we walked together… When we hugged… When we kissed for the first time… When you kept looking at me while we were sitting on the bench… When we looked into each other’s eyes on video call — “eyes in eyes 👀” Oh my god, I just lovvvvvve all these moments of us 😙 I can never forget them.
-
-Mhm, I don’t even know how to express my feelings. I literally can’t describe my love for you in words. I just pray for us… that we always stay together, that we get married one day — my biggest dream with you. I pray that we stay happy, that we get tons of happiness together. And I pray that you find success in everything you do. Ameen.
-
-I just want to see you at the top of success because <b>you’re the only man I ever prayed for.</b> Ahhh I’m getting emotional now, so I'm ending this letter 🫠 I just want to say that <b>I’ll always love you. I’m never giving up on you, no matter what.</b>
-
-So remember this: <b>“You’ll always be my bachaa, chandaa, meri jaan.”</b>
-
-I hope you like this small effort from my side to make you smile 🎀 Love youuuu ~ ❤️ </p> </div>
-
-  </div>  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  <script>
-    // Target unlock date/time (set to 26 Nov 2025 00:00 local time)
-    const target = new Date('Nov 26, 2025 00:00:00').getTime();
-
-    // Elements
-    const daysEl = document.getElementById('days');
-    const hoursEl = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
-    const startBtn = document.getElementById('startBtn');
+<script>
+    const countdownEl = document.getElementById("countdown");
+    const letterBtn = document.getElementById("letterBtn");
+    const letter = document.getElementById("letter");
     const popup = document.getElementById('popup');
-    const confettiCanvas = document.getElementById('confetti');
-    const frontWrap = document.getElementById('frontWrap');
-    const letterPage = document.getElementById('letterPage');
+    const closePopup = document.getElementById('closePopup');
 
-    // Countdown update (shows live on front card)
-    function updateCountdown(){
-      const now = Date.now();
-      let diff = target - now;
-      if(diff < 0) diff = 0;
+    // Set birthday date
+    const birthday = new Date("Nov 25, 2025 00:00:00").getTime();
 
-      const d = Math.floor(diff / (1000*60*60*24));
-      const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-      const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-      const s = Math.floor((diff % (1000*60)) / 1000);
+    const timer = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = birthday - now;
 
-      daysEl.textContent = d;
-      hoursEl.textContent = h;
-      minutesEl.textContent = m;
-      secondsEl.textContent = s;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000*60*60));
+        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((distance % (1000*60)) / 1000);
 
-      return diff;
-    }
+        countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-    // Run countdown every second
-    let cdInterval = setInterval(()=>{
-      const remaining = updateCountdown();
-      if(remaining <= 0){
-        clearInterval(cdInterval);
-        // Auto-trigger celebration when time is up
-        celebrate();
-      }
-    },1000);
-
-    // Allow preview button (for testers) to play the sequence immediately
-    startBtn.addEventListener('click', ()=>{
-      // Quick 3..2..1 mini countdown overlay effect
-      let count = 3;
-      startBtn.disabled = true;
-      const origText = startBtn.textContent;
-      startBtn.textContent = count;
-      const t = setInterval(()=>{
-        count--;
-        if(count>0) startBtn.textContent = count;
-        if(count<=0){
-          clearInterval(t);
-          startBtn.textContent = origText;
-          startBtn.disabled = false;
-          celebrate();
+        if(distance <= 0){
+            clearInterval(timer);
+            countdownEl.style.display = "none";
+            letterBtn.style.display = "inline-block";
+            popup.style.display = "flex"; // show popup when countdown ends
         }
-      },900);
+    }, 1000);
+
+    // Letter button click
+    letterBtn.addEventListener("click", () => {
+        letter.style.display = "block";
+        letterBtn.style.display = "none";
     });
 
-    // Celebration: popup -> confetti/fireworks -> reveal letter
-    function celebrate(){
-      // show popup first
-      popup.style.display = 'block';
-      popup.style.opacity = 1;
-      popup.style.transform = 'translate(-50%,-50%) scale(1)';
+    // Close popup
+    closePopup.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
 
-      // start confetti canvas
-      confettiCanvas.style.display = 'block';
-
-      // confetti bursts with canvas-confetti for ~6s
-      const duration = 6000;
-      const end = Date.now() + duration;
-
-      (function frame(){
-        // multiple bursts
-        confetti({
-          particleCount: 12,
-          spread: 120,
-          startVelocity: 40,
-          origin: { x: Math.random(), y: Math.random()*0.2 }
-        });
-        confetti({
-          particleCount: 8,
-          spread: 60,
-          startVelocity: 50,
-          origin: { x: Math.random(), y: Math.random()*0.2 }
-        });
-
-        if(Date.now() < end){
-          requestAnimationFrame(frame);
-        }
-      })();
-
-      // small fireworks-like bursts (symmetric)
-      const fw = setInterval(()=>{
-        confetti({
-          particleCount: 30,
-          spread: 360,
-          scalar: 0.8,
-          startVelocity: 70,
-          origin: { x: 0.5, y: 0.35 }
-        });
-      },700);
-
-      // after 1.2s, hide the front card and show letter
-      setTimeout(()=>{
-        popup.style.opacity = 0;
-      },2500);
-
-      // reveal letter after short delay
-      setTimeout(()=>{
-        // stop fireworks
-        clearInterval(fw);
-        // hide front
-        frontWrap.style.display = 'none';
-        // show letter page
-        letterPage.style.display = 'block';
-        // ensure confetti finishes visually then hide
-        setTimeout(()=>{ confettiCanvas.style.display = 'none'; popup.style.display = 'none'; }, 4000);
-      },2700);
+    // Sparkle effect
+    for(let i=0; i<30; i++){
+        const sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+        sparkle.style.left = Math.random()*100 + "vw";
+        sparkle.style.animationDuration = 1 + Math.random()*2 + "s";
+        sparkle.style.width = sparkle.style.height = 5 + Math.random()*10 + "px";
+        document.body.appendChild(sparkle);
     }
+</script>
 
-    // initialize visuals
-    updateCountdown();
-  </script></body>
+</body>
 </html>
